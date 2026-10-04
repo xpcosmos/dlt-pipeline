@@ -6,36 +6,61 @@ from pyspark.sql import functions as F
 catalog = "dlt_lakehouse"
 
 
-data_file = f"/Volumes/{catalog}/default/raw/events/*.pb"
+events_cdc_bronze_file = f"/Volumes/{catalog}/default/raw/events/*.pb"
 descriptor_file = f"/Volumes/{catalog}/default/raw/events.desc"
 
-dp.create_streaming_table(
-    "events_cdc_bronze",
+
+@dp.table(
+    name="events_cdc_bronze",
     comment="New customer data incrementally ingested from cloud object storage landing zone",
     table_properties={"layer": "bronze", "throughput": "high", "filetype": "protobuf"},
-    expect_all_or_drop={"machine_id_not_null": "proto_data.machine_id IS NOT NULL"}
 )
-
-@dp.append_flow(
-    target='events_cdc_bronze',
-    name="events_cdc_bronze_flow",
-    comment="New customer data incrementally ingested from cloud object storage landing zone",
-)
-def events_cdc_bronze():
+def events_cdc_bronze_flow():
     return (
         spark.readStream.format("cloudFiles")
         .option("cloudFiles.format", "binaryFile")
-        .load(data_file)
-        .withColumn(
-            "trimmed_content", F.expr("substring(content, 3, length(content) - 2)")
-        )
-        .withColumn(
-            "proto_data",
-            from_protobuf(
-                data="trimmed_content",
-                messageName="factory.smart_manufacturing.Events",
-                descFilePath=descriptor_file,
-                options={"mode": "PERMISSIVE"},
-            ),
-        )
+        .load(events_cdc_bronze_file)
+    )
+
+
+machines_cdc_bronze_file = f"/Volumes/dlt_lakehouse/default/raw/machines"
+machine_schema = StructType(
+    [
+        StructField("machine_id", StringType(), True),
+        StructField("machine_serial", StringType(), True),
+        StructField("vendor", StringType(), True),
+        StructField("model", StringType(), True),
+        StructField("station_type", StringType(), True),
+        StructField("line_id", StringType(), True),
+        StructField("cell", StringType(), True),
+        StructField("location", StringType(), True),
+        StructField("firmware_version", StringType(), True),
+        StructField("controller_ip", StringType(), True),
+        StructField("installation_date", StringType(), True),
+        StructField("last_calibration_date", StringType(), True),
+        StructField("calibration_due_date", StringType(), True),
+        StructField("rated", StringType(), True),
+        StructField("status", StringType(), True),
+        StructField("owner", StringType(), True),
+        StructField("telemetry", StringType(), True),
+        StructField('_rescued_data', StringType(), True)
+    ]
+)
+
+
+@dp.table(
+    name="machines_cdc_bronze",
+    comment="Data with machhine definitions",
+    table_properties={"layer": "bronze", "throughput": "low", "filetype": "csv"},
+    schema=machine_schema,
+)
+def machines_cdc_bronze_flow():
+    return (
+        spark.readStream.format("cloudFiles")
+        .option("cloudFiles.format", "csv")
+        .option("cloudFiles.schemaEvolutionMode", "rescue")
+        .option("header", "true")
+        .option("inferSchema", "false")
+        .option('sep',";")
+        .load(machines_cdc_bronze_file)
     )
