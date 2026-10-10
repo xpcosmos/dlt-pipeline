@@ -3,13 +3,8 @@ from pyspark.sql.protobuf.functions import to_protobuf, from_protobuf
 from pyspark.sql.types import *
 from pyspark.sql import functions as F
 
-
-catalog = "dlt_lakehouse"
-descriptor_file = f"/Volumes/{catalog}/default/raw/events.desc"
-
-
 @dp.table(
-    name="events_cdc_silver",
+    name="silver.events_cdc_silver",
     comment="Decoded data from `bronze.events_cdc_bronze`",
     table_properties={"layer": "silver", "throughput": "high", "filetype": "table"},
 )
