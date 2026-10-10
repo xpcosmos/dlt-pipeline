@@ -1,0 +1,16 @@
+
+Â
+events.protofactory.smart_manufacturing"Œ
+Events
+
+event_type (	R	eventType#
+event_message (	ReventMessage
+severity (	Rseverity
+source (	Rsource
+
+machine_id (	R	machineId
+sequence_no (R
+sequenceNo
+event_ts (	ReventTs
+	ingest_ts (	RingestTs
+tags	 (	Rtagsbproto3
