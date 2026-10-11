@@ -1,0 +1,32 @@
+# This is a Declarative Automation Bundle definition for dlt-pipelines.
+# The Databricks extension requires databricks.yml configuration file.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+
+bundle:
+  name: dlt-pipelines
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-e49c6f42-9c95.cloud.databricks.com
+      file_path: "/Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline"
+      root_path: "/Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline"
+    resources:
+      pipelines:
+        SmartFactory:
+          name: my_pipeline
+          root_path: /Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline/SmartFactory
+          serverless: true
+          id: bfabd564-b189-4c4b-9679-69f5d78246de
+          catalog: dlt_lakehouse
+          schema: bronze
+          development: false
+          photon: true
+          channel: CURRENT
+          libraries:
+          - glob:
+              include: /Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline/SmartFactory/transformations/**
+          configuration:
+            bundle.sourcePath: /Workspace/${workspace.file_path}/src
