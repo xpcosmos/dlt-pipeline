@@ -1,4 +1,5 @@
 from pyspark import pipelines as dp
+from get_spark import spark
 
 
 catalog = "dlt_lakehouse"

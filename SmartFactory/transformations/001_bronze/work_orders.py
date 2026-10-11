@@ -1,8 +1,8 @@
 from pyspark import pipelines as dp
 from pyspark.sql.protobuf.functions import to_protobuf, from_protobuf
-from pyspark.sql.types import *
-from pyspark.sql import functions as F
-# Work Orders
+from pyspark.sql.types import StructField, StructType, StringType, ArrayType
+from get_spark import spark
+
 
 work_orders_cdc_bronze_file = "/Volumes/dlt_lakehouse/default/raw/work_orders/*.jsonl"
 work_orders_cdc_schema = StructType(
@@ -103,7 +103,7 @@ def work_orders_cdc_bronze_flow():
         .option("cloudFiles.format", "json")
         .option("primitivesAsString", True)
         .option("mode", "PERMISSIVE")
-        .option('schema', work_orders_cdc_schema)
+        .option('schema', work_orders_cdc_schema) # type: ignore
         .option("columnNameOfCorruptRecord", "_corrupt_record")
         .option("multiLine", True)
     ).load(work_orders_cdc_bronze_file)

@@ -1,17 +1,18 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import *
-from pyspark.sql.protobuf.functions import to_protobuf, from_protobuf
+
+from pyspark.sql.protobuf.functions import from_protobuf
 from pyspark.sql import functions as F
+from get_spark import spark
+
 
 descriptor_file = "/Volumes/dlt_lakehouse/default/raw/events.desc"
-
 
 @dp.table(
     name="silver.events_cdc_silver",
     comment="Decoded data from `bronze.events_cdc_bronze`",
     table_properties={"layer": "silver", "throughput": "high", "filetype": "table"},
 )
-@dp.expect_all_or_drop(
+@dp.expect_all_or_drop( # type: ignore[attr-defined]
     {
         "machine_id_not_null": "machine_id IS NOT NULL",
         "event_ts_is_not_invalid":"event_ts != 'not-a-timestamp'"

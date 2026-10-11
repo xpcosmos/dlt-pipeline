@@ -1,5 +1,5 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import *
+from get_spark import spark
 
 # Telemetry Table
 

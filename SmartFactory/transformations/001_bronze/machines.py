@@ -1,6 +1,6 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import *
-
+from pyspark.sql.types import StructType, StructField, StringType
+from get_spark import spark
 
 machines_cdc_bronze_file = f"/Volumes/dlt_lakehouse/default/raw/machines"
 
