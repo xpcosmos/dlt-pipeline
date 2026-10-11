@@ -16,7 +16,7 @@ targets:
     resources:
       pipelines:
         SmartFactory:
-          name: my_pipeline
+          name: SmartFactory
           root_path: /Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline/SmartFactory
           serverless: true
           id: bfabd564-b189-4c4b-9679-69f5d78246de
@@ -29,4 +29,4 @@ targets:
           - glob:
               include: /Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline/SmartFactory/transformations/**
           configuration:
-            bundle.sourcePath: /Workspace/${workspace.file_path}/src
+            bundle.sourcePath: ${workspace.file_path}/src
