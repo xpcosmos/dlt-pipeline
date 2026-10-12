@@ -1,6 +1,6 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import *
-
+from pyspark.sql.types import StructType, StructField, StringType
+from get_spark import spark
 
 machines_cdc_bronze_file = f"/Volumes/dlt_lakehouse/default/raw/machines"
 
@@ -26,6 +26,7 @@ machine_schema = StructType(
         StructField("_rescued_data", StringType()),
     ]
 )
+archive_path = "/Volumes/dlt_lakehouse/default/raw/archive/"
 @dp.table(
     name="machines_cdc_bronze",
     comment="Data with machhine definitions",
@@ -37,6 +38,9 @@ def machines_cdc_bronze_flow():
         spark.readStream.format("cloudFiles")
         .option("cloudFiles.format", "csv")
         .option("cloudFiles.schemaEvolutionMode", "rescue")
+        .option("cloudFiles.cleanSource", "MOVE")
+        .option("cloudFiles.cleanSource.moveDestination", archive_path)
+        .option("cloudFiles.cleanSource.retentionDuration", "7 days")
         .option("header", "true")
         .option("inferSchema", "false")
         .option("sep", ";")

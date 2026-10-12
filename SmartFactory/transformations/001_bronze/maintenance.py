@@ -1,5 +1,6 @@
 from pyspark import pipelines as dp
-from pyspark.sql.types import *
+from pyspark.sql.types import StructField, StringType, StructType
+from get_spark import spark
 
 # Mainteinance Table
 
