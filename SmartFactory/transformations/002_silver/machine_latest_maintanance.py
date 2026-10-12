@@ -33,5 +33,5 @@ def machines_cdc_silver_flow():
         .withColumn("window", from_json(col("window"), schema=window_col_schema))
         .select("machine_id", col("window.actual_start").alias("actual_start"))
         .groupBy("machine_id")
-        .agg(max(col("actual_start")))
+        .agg(max(col("actual_start")).alias('latest_date'))
     )
