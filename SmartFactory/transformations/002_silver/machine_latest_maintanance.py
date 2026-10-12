@@ -32,5 +32,6 @@ def machines_cdc_silver_flow():
         .select("machine_id", "window")
         .withColumn("window", from_json(col("window"), schema=window_col_schema))
         .select("machine_id", col("window.actual_start").alias("actual_start"))
-        # .join(on='machine_id', how='left', other=)
+        .groupBy("machine_id")
+        .agg(max(col("actual_start")))
     )
