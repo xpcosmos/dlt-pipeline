@@ -1,0 +1,16 @@
+resources:
+  pipelines:
+    id: bfabd564-b189-4c4b-9679-69f5d78246de
+    pipeline_type: WORKSPACE
+    name: SmartFactory
+    libraries:
+      - glob:
+          include: /Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline/SmartFactory/transformations/**
+    schema: bronze
+    continuous: false
+    development: false
+    photon: true
+    channel: CURRENT
+    catalog: dlt_lakehouse
+    serverless: true
+    root_path: /Workspace/Users/mikeias.oliveira@al.infnet.edu.br/dlt-pipeline/SmartFactory

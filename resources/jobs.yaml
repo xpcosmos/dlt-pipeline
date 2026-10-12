@@ -1,0 +1,20 @@
+resources:
+  jobs:
+    SmartFactory:
+      name: SmartFactory
+      email_notifications:
+        on_failure:
+          - mikeias.oliveira@al.infnet.edu.br
+      notification_settings:
+        no_alert_for_skipped_runs: true
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: /Volumes/dlt_lakehouse/default/raw/
+          min_time_between_triggers_seconds: 900
+      tasks:
+        - task_key: pipeline-task-bfabd564-b189-4c4b-9679-69f5d78246de
+          pipeline_task:
+            pipeline_id: bfabd564-b189-4c4b-9679-69f5d78246de
+            full_refresh: false
+      performance_target: PERFORMANCE_OPTIMIZED

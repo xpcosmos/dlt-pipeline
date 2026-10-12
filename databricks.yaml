@@ -1,0 +1,15 @@
+# databricks.yml
+bundle:
+  name: dlt_pipeline_smart_factory
+
+include:
+  - ./resources/jobs.yaml
+  - ./resources/pipelines.yaml
+
+workspace:
+  host: https://dbc-e49c6f42-9c95.cloud.databricks.com
+
+targets:
+  dev:
+    default: true
+    mode: development
